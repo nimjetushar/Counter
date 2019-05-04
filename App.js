@@ -6,44 +6,69 @@
  * @flow
  */
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { AppStyles } from './App.styles'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+let timer;
 
-type Props = {};
-export default class App extends Component<Props> {
+export default class App extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      counter: {
+        millisecond: 0,
+        second: 0,
+        minutes: 0
+      }
+    }
+  }
+
+  startTimer() {
+    timer = setInterval(() => {
+      this.setCounter();
+    }, 1)
+  }
+
+  stopTimer() {
+    clearInterval(timer);
+  }
+
+  setCounter() {
+    const counter = Object.assign({}, this.state.counter);
+    counter.millisecond += 1;
+    if (counter.millisecond > 60) {
+      counter.millisecond = 0;
+      counter.second += 1;
+    }
+    if (counter.second > 60) {
+      counter.millisecond = 0;
+      counter.second = 0;
+      counter.minutes += 1;
+    }
+    this.setState({ 'counter': counter });
+  }
+
+  componentDidMount() {
+    this.stopTimer();
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <View style={styles.counter}>
+          <Text style={styles.minutes}>{this.state.counter.minutes}</Text>
+          <Text style={styles.second}>:{this.state.counter.second}.</Text>
+          <Text style={styles.millisecond}>{this.state.counter.millisecond}</Text>
+        </View>
+        <View style={styles.actionBar}>
+          <Icon name='play-circle' type='font-awesome' size={42}></Icon>
+        </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+const styles = StyleSheet.create(AppStyles);
