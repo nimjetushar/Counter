@@ -6,12 +6,23 @@ export const AppStyles = {
         backgroundColor: '#F5FCFF',
     },
     counter: {
+        flex: 4,
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     millisecond: {
-
+        marginTop: 14
     },
-    second: {},
-    minutes: {},
-    actionBar: {}
+    second: {
+    },
+    minutes: {
+    },
+    actionBar: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    actionBtn: {
+        margin: 10
+    }
 }

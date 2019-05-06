@@ -7,8 +7,8 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Icon, Text } from 'react-native-elements';
 import { AppStyles } from './App.styles'
 
 let timer;
@@ -17,41 +17,59 @@ export default class App extends Component {
 
   constructor() {
     super();
+    this.initialCounter = {
+      millisecond: 0,
+      second: '00',
+      minutes: 0
+    };
+
     this.state = {
-      counter: {
-        millisecond: 0,
-        second: 0,
-        minutes: 0
-      }
+      counter: Object.assign({}, this.initialCounter),
+      showStartBtn: true,
+      actionBtnSize: 50
     }
   }
 
   startTimer() {
+    this.setState({ showStartBtn: false });
     timer = setInterval(() => {
       this.setCounter();
     }, 1)
   }
 
   stopTimer() {
+    this.setState({ showStartBtn: true });
     clearInterval(timer);
   }
 
-  setCounter() {
-    const counter = Object.assign({}, this.state.counter);
-    counter.millisecond += 1;
-    if (counter.millisecond > 60) {
-      counter.millisecond = 0;
-      counter.second += 1;
-    }
-    if (counter.second > 60) {
-      counter.millisecond = 0;
-      counter.second = 0;
-      counter.minutes += 1;
-    }
-    this.setState({ 'counter': counter });
+  resetTimer() {
+    this.setState({
+      counter: Object.assign({}, this.initialCounter),
+      showStartBtn: true
+    });
+    this.stopTimer();
   }
 
-  componentDidMount() {
+  setCounter() {
+    let { millisecond, second, minutes } = Object.assign({}, this.state.counter);
+
+    millisecond += 1;
+    if (millisecond > 60) {
+      millisecond = 0;
+      second = Number(second) + 1;
+      if (second < 9) {
+        second = `0${second}`;
+      }
+    }
+    if (Number(second) > 60) {
+      millisecond = 0;
+      second = '00';
+      minutes += 1;
+    }
+    this.setState({ counter: { millisecond, second, minutes } });
+  }
+
+  componentWillUnmount() {
     this.stopTimer();
   }
 
@@ -59,12 +77,24 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.counter}>
-          <Text style={styles.minutes}>{this.state.counter.minutes}</Text>
-          <Text style={styles.second}>:{this.state.counter.second}.</Text>
-          <Text style={styles.millisecond}>{this.state.counter.millisecond}</Text>
+          <Text h1 style={styles.minutes}>{this.state.counter.minutes}</Text>
+          <Text h1 style={styles.second}>:{this.state.counter.second}.</Text>
+          <Text h4 style={styles.millisecond}>{this.state.counter.millisecond}</Text>
         </View>
         <View style={styles.actionBar}>
-          <Icon name='play-circle' type='font-awesome' size={42}></Icon>
+          {(this.state.showStartBtn) ?
+            <Icon iconStyle={styles.actionBtn}
+              name='play-circle'
+              type='font-awesome' 
+              size={this.state.actionBtnSize}
+              onPress={() => this.startTimer()}></Icon> :
+            <Icon iconStyle={styles.actionBtn}
+              name='pause'
+              size={this.state.actionBtnSize}
+              onPress={() => this.stopTimer()}></Icon>}
+
+          <Icon iconStyle={styles.actionBtn} name='autorenew'
+            size={this.state.actionBtnSize} onPress={() => this.resetTimer()}></Icon>
         </View>
       </View>
     );
