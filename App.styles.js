@@ -12,7 +12,8 @@ export const AppStyles = {
         alignItems: 'center'
     },
     millisecond: {
-        marginTop: 14
+        marginTop: 14,
+        width: 30
     },
     second: {
     },

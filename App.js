@@ -57,7 +57,7 @@ export default class App extends Component {
     if (millisecond > 60) {
       millisecond = 0;
       second = Number(second) + 1;
-      if (second < 9) {
+      if (second < 10) {
         second = `0${second}`;
       }
     }
