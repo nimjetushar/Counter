@@ -1,6 +1,7 @@
 # Counter
 
 [![GitHub license](https://img.shields.io/github/license/nimjetushar/Counter.svg)](https://github.com/nimjetushar/Counter/blob/master/LICENSE)
+[![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/nimjetushar/counter-react-native)
 
 Counter mobile application using React native
 
